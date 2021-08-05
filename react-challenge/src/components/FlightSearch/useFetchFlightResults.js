@@ -3,7 +3,7 @@ import React from 'react';
 const FLIGHTS_URL = 'http://localhost:4000/flights';
 
 const useFetchFlightResults = () => {
-  const [flights, setFlights] = React.useState([]);
+  const [flights, setFlights] = React.useState({});
   const [error, setError] = React.useState(null);
 
   const fetchFlights = async () => {

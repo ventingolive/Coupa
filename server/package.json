@@ -8,6 +8,11 @@
     "test:watch": "jest --watch",
     "start": "node app.js"
   },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    }
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

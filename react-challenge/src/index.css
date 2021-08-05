@@ -106,3 +106,15 @@ label {
 .fade {
   opacity: 0.6;
 }
+
+.fill-available-screen {
+  min-height: calc(100vh - 55px);
+}
+
+.footer-align {
+  align-items: center;
+}
+
+Button {
+  max-height: 34px;
+}
