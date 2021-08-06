@@ -33,13 +33,13 @@ export default function FlightSearch() {
   function SortFlights() {
     switch (sortBy.value) {
       case SortByEnum.BEST:
-        return sortedFlights = Array.isArray(flights) ? sortBestFlight(flights, timeSortBy.value) : null
+        return sortedFlights = sortBestFlight(flights, timeSortBy.value) 
       case SortByEnum.PRICE_LOW:
-        return Array.isArray(flights) ? sortPriceLowFlight(flights, timeSortBy.value) : null
+        return sortPriceLowFlight(flights, timeSortBy.value) 
       case SortByEnum.TIME_OF_DAY:
-        return Array.isArray(flights) ? sortTimeOfDayFlight(flights, timeSortBy.value) : null
+        return sortTimeOfDayFlight(flights, timeSortBy.value) 
       default:
-        return Array.isArray(flights) ? sortBestFlight(flights, timeSortBy.value) : null
+        return sortBestFlight(flights, timeSortBy.value) 
     }
   }
 
