@@ -52,7 +52,7 @@ describe('Flight Search Utility Functions', () => {
           score: 3459
         }
       ];
-      expect(sortBestFlight(flights)).toEqual([{ "score": 3459 }, { "score": 3469 }, { "score": 3479 }]);
+      expect(sortBestFlight(flights, 'TIME_NONE')).toEqual([{ "score": 3459 }, { "score": 3469 }, { "score": 3479 }]);
     });
     it('should sort flight data by low price', () => {
       const flights = [
@@ -66,7 +66,7 @@ describe('Flight Search Utility Functions', () => {
           price: 185.38
         }
       ];
-      expect(sortPriceLowFlight(flights)).toEqual([{ "price": 185.38 }, { "price": 195.38 }, { "price": 205.38 }]);
+      expect(sortPriceLowFlight(flights, 'TIME_NONE')).toEqual([{ "price": 185.38 }, { "price": 195.38 }, { "price": 205.38 }]);
     });
     it('should sort flight data by time of day', () => {
       const flights = [
@@ -86,7 +86,7 @@ describe('Flight Search Utility Functions', () => {
           }]
         }
       ];
-      expect(sortTimeOfDayFlight(flights)).toEqual([
+      expect(sortTimeOfDayFlight(flights, 'TIME_NONE')).toEqual([
         {
           segmentsArray: [{
             departsAt: "2018-10-08T12:00:00.000Z"         

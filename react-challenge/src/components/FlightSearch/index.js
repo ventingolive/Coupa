@@ -5,7 +5,7 @@ import FlightSearchFooter from './FlightSearchFooter';
 import useFetchFlightResults from './useFetchFlightResults';
 import SortBy from './filters/SortBy';
 import { SortByDefaultOption, SortByEnum, SortByTimeDefaultOption } from './filters/SortBy/enums';
-import { sortBestFlight, sortPriceLowFlight, sortTimeOfDayFlight, filterMorning, filterAfternoon, filterEvening, filterRedEye } from './utils';
+import { sortBestFlight, sortPriceLowFlight, sortTimeOfDayFlight } from './utils';
 
 export default function FlightSearch() {
   const [sortBy, setSortBy] = useState(SortByDefaultOption);
@@ -14,48 +14,46 @@ export default function FlightSearch() {
 
   // Fetch Flights
   const { flights } = useFetchFlightResults();//this will only be called once in the lifecycle
-  let sortedFlights = [];
-  let availablePageSpace = Math.floor((window.innerHeight - (100 + 54 + 79)) / 64) - 1;
-  switch (sortBy.value) {
-    case SortByEnum.BEST:
-      sortedFlights = Array.isArray(flights) ? sortBestFlight(flights) : null
-      break;
-    case SortByEnum.PRICE_LOW:
-      sortedFlights = Array.isArray(flights) ? sortPriceLowFlight(flights) : null
-      break;
-    case SortByEnum.TIME_OF_DAY:
-      sortedFlights = Array.isArray(flights) ? sortTimeOfDayFlight(flights) : null
-      break;
-    default:
-      sortedFlights = Array.isArray(flights) ? sortBestFlight(flights) : null
-      break;
-  }
-  switch (timeSortBy.value) {
-    case SortByEnum.TIME_MORNING:
-      sortedFlights = sortedFlights.length > 0 ? filterMorning(sortedFlights) : null
-      break;
-    case SortByEnum.TIME_AFTERNOON:
-      sortedFlights = sortedFlights.length > 0 ? filterAfternoon(sortedFlights) : null
-      break;
-    case SortByEnum.TIME_EVENING:
-      sortedFlights = sortedFlights.length > 0 ? filterEvening(sortedFlights) : null
-      break;
-    case SortByEnum.TIME_RED_EYE:
-      sortedFlights = sortedFlights.length > 0 ? filterRedEye(sortedFlights) : null
-      break;
-    default:
-      break;
+
+  //Mutate Flights
+  if (Array.isArray(flights)) {
+    //Sort and Filter data
+    var sortedFlights = SortFlights()
+    //get the number of tiles available on page
+    var availablePageSpace = GetFlightPageSpace()
+    //paginate sortedFlights
+    var paginatedFlights = PaginateFlights(sortedFlights)
   }
 
-  if (Array.isArray(sortedFlights)) {
-    var paginatedFlights = sortedFlights.map((e, i) => {
-      return i % availablePageSpace === 0 ? sortedFlights.slice(i, i + availablePageSpace) : null;
+  //utility functions
+  function GetFlightPageSpace() {
+    return Math.floor((window.innerHeight - (100 + 54 + 79)) / 64) - 1;
+  }
+
+  function SortFlights() {
+    switch (sortBy.value) {
+      case SortByEnum.BEST:
+        return sortedFlights = Array.isArray(flights) ? sortBestFlight(flights, timeSortBy.value) : null
+      case SortByEnum.PRICE_LOW:
+        return Array.isArray(flights) ? sortPriceLowFlight(flights, timeSortBy.value) : null
+      case SortByEnum.TIME_OF_DAY:
+        return Array.isArray(flights) ? sortTimeOfDayFlight(flights, timeSortBy.value) : null
+      default:
+        return Array.isArray(flights) ? sortBestFlight(flights, timeSortBy.value) : null
+    }
+  }
+
+  function PaginateFlights(theFlights) {
+    return theFlights.map((e, i) => {
+      return i % availablePageSpace === 0 ? theFlights.slice(i, i + availablePageSpace) : null;
     }).filter(e => { return e; });
   }
+
   function UpdateSortType(newSort) {
     setSortBy(newSort)
     setCurrentPage(0)
   }
+
   function UpdateTimeSortType(newSort) {
     setTimeSortBy(newSort)
   }
@@ -71,7 +69,7 @@ export default function FlightSearch() {
         </div>
         {/* Display Flight Results */}
         <div className="pane-content">
-          {Array.isArray(paginatedFlights) &&
+          {Array.isArray(paginatedFlights) && paginatedFlights.length > 0 &&
             paginatedFlights[currentPage].map(flight => (
               <FlightSearchItem key={flight.id} flight={flight} />
             ))}
