@@ -1,4 +1,5 @@
 import { SortByEnum } from './filters/SortBy/enums';
+import moment from 'moment';
 
 export const getFlightNumbers = flights => {
   return flights
@@ -28,12 +29,16 @@ export const sortPriceLowFlight = (flights, filterBy) => {
     return filterFlights(filterBy, flights.sort((a, b) => (a.price < b.price) ? -1 : 1))
 }
 export const sortTimeOfDayFlight = (flights, filterBy) => {
+  //const departureTime = moment(departsAt).format(timeFormat);
   if (filterBy === SortByEnum.TIME_NONE)
-    return Array.isArray(flights) ? flights.sort((a, b) => (a.segmentsArray[0].departsAt < b.segmentsArray[0].departsAt) ? -1 : 1) : null
+    return Array.isArray(flights) ? flights.sort((a, b) => (moment(a.segmentsArray[0].startDate) < moment(b.segmentsArray[0].startDate)) ? -1 : 1) : null
   else
-    return filterFlights(filterBy, flights.sort((a, b) => (a.segmentsArray[0].departsAt < b.segmentsArray[0].departsAt) ? -1 : 1))
+    return filterFlights(filterBy, flights.sort((a, b) => (moment(a.segmentsArray[0].startDate) < moment(b.segmentsArray[0].startDate)) ? -1 : 1))
 }
 //PAGINATION
+export const GetFlightPageSpace = () => {
+  return Math.floor((window.innerHeight - (100 + 54 + 79)) / 64) - 1;//window height - header/footer height / tile size
+}
 export const paginationPossible = (pagination) => {
   if (pagination.isIncrement)
     return ((pagination.currentPage + 1) <= pagination.maxPage)

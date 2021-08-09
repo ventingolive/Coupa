@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import './index.style.css';
 import FlightSearchItem from './FlightSearchItem';
 import FlightSearchFooter from './FlightSearchFooter';
 import useFetchFlightResults from './useFetchFlightResults';
 import SortBy from './filters/SortBy';
 import { SortByDefaultOption, SortByEnum, SortByTimeDefaultOption } from './filters/SortBy/enums';
-import { sortBestFlight, sortPriceLowFlight, sortTimeOfDayFlight } from './utils';
+import { sortBestFlight, sortPriceLowFlight, sortTimeOfDayFlight, GetFlightPageSpace } from './utils';
 
 export default function FlightSearch() {
   const [sortBy, setSortBy] = useState(SortByDefaultOption);
@@ -13,34 +13,32 @@ export default function FlightSearch() {
   const [currentPage, setCurrentPage] = useState(0);
 
   // Fetch Flights
-  const { flights } = useFetchFlightResults();//this will only be called once in the lifecycle
+  const { flights } = useFetchFlightResults();//this will only be called once in the lifecycle  
+  const memoSort = useCallback(() => SortFlights(flights, sortBy, timeSortBy), [flights, sortBy, timeSortBy])
 
-  //Mutate Flights
   if (Array.isArray(flights)) {
-    //Sort and Filter data
-    var sortedFlights = SortFlights()
     //get the number of tiles available on page
     var availablePageSpace = GetFlightPageSpace()
     //paginate sortedFlights
-    var paginatedFlights = PaginateFlights(sortedFlights)
+    var paginatedFlights = PaginateFlights(memoSort({ ...flights }, sortBy, timeSortBy))
   }
 
   //utility functions
-  function GetFlightPageSpace() {
-    return Math.floor((window.innerHeight - (100 + 54 + 79)) / 64) - 1;
-  }
-
-  function SortFlights() {
-    switch (sortBy.value) {
-      case SortByEnum.BEST:
-        return sortedFlights = sortBestFlight(flights, timeSortBy.value) 
-      case SortByEnum.PRICE_LOW:
-        return sortPriceLowFlight(flights, timeSortBy.value) 
-      case SortByEnum.TIME_OF_DAY:
-        return sortTimeOfDayFlight(flights, timeSortBy.value) 
-      default:
-        return sortBestFlight(flights, timeSortBy.value) 
+  function SortFlights(fullFlight, mySort, myTime) {
+    if (Array.isArray(fullFlight)) {
+      switch (mySort.value) {
+        case SortByEnum.BEST:
+          return sortBestFlight(flights, myTime.value)
+        case SortByEnum.PRICE_LOW:
+          return sortPriceLowFlight(flights, myTime.value)
+        case SortByEnum.TIME_OF_DAY:
+          return sortTimeOfDayFlight(flights, myTime.value)
+        default:
+          return sortBestFlight(flights, myTime.value)
+      };
     }
+    else
+      return null
   }
 
   function PaginateFlights(theFlights) {
@@ -57,6 +55,7 @@ export default function FlightSearch() {
   function UpdateTimeSortType(newSort) {
     setTimeSortBy(newSort)
   }
+
   return (
     <div className="row fill-available-screen">
       <div className="pane m-t-1">

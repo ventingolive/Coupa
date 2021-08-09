@@ -118,3 +118,10 @@ label {
 Button {
   max-height: 34px;
 }
+
+.search-results__filter-item {
+  display: flex;
+}
+.sort-by-section:nth-child(2) {
+  padding-left: 20px;
+}

@@ -4,11 +4,11 @@ import { paginationPossible } from './utils'
 
 export default function FlightSearchPagination({ currentValue, maxValue, onChange }) {
   function incrementPage() {
-    if (paginationPossible({ isIncrement: true, currentPage: currentValue, maxPage: maxValue }))
+    if (paginationPossible({ isIncrement: true, currentPage: currentValue + 1, maxPage: maxValue }))
       onChange(currentValue + 1)
   }
   function decrementPage() {
-    if (paginationPossible({ isIncrement: false, currentPage: currentValue, maxPage: maxValue }))
+    if (paginationPossible({ isIncrement: false, currentPage: currentValue - 1, maxPage: maxValue }))
       onChange(currentValue - 1)
   }
   return (

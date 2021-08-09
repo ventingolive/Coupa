@@ -71,47 +71,35 @@ describe('Flight Search Utility Functions', () => {
     it('should sort flight data by time of day', () => {
       const flights = [
         {
-          segmentsArray: [{
-            departsAt: "2018-10-08T6:00:00.000Z"         
-          }]
+          searchId: "UA3222018-10-08T00:47:00:UA4632018-10-08T08:00:00"
         },
         {
-          segmentsArray: [{
-            departsAt: "2018-10-08T12:00:00.000Z"         
-          }]
+          searchId: "WN19822018-10-08T17:05:00:WN22302018-10-08T21:15:00"
         },
         {
-          segmentsArray: [{
-            departsAt: "2018-10-08T2:00:00.000Z"         
-          }]
+          searchId: "UA5332018-10-08T11:25:00"
         }
       ];
       expect(sortTimeOfDayFlight(flights, 'TIME_NONE')).toEqual([
         {
-          segmentsArray: [{
-            departsAt: "2018-10-08T12:00:00.000Z"         
-          }]
+          searchId: "UA3222018-10-08T00:47:00:UA4632018-10-08T08:00:00"
         },
         {
-          segmentsArray: [{
-            departsAt: "2018-10-08T2:00:00.000Z"         
-          }]
+          searchId: "UA5332018-10-08T11:25:00"
         },
         {
-          segmentsArray: [{
-            departsAt: "2018-10-08T6:00:00.000Z"         
-          }]
+          searchId: "WN19822018-10-08T17:05:00:WN22302018-10-08T21:15:00"
         }
       ]);
     });
   });
   describe('Pagination', () => {
     it('should determine if decrement pagination is possible', () => {
-      const paginationInfo = {isIncrement: false, currentPage: 0, maxPage: 10}
+      const paginationInfo = { isIncrement: false, currentPage: 0, maxPage: 10 }
       expect(paginationPossible(paginationInfo)).toEqual(false);
     });
     it('should determine if increment pagination is possible', () => {
-      const paginationInfo = {isIncrement: true, currentPage: 10, maxPage: 10}
+      const paginationInfo = { isIncrement: true, currentPage: 10, maxPage: 10 }
       expect(paginationPossible(paginationInfo)).toEqual(false);
     });
   });
